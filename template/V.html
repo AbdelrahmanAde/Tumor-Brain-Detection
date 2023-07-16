@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Analysis with D3.js</title>
+  <style>
+    .output-container {
+      width: 400px;
+      height: 200px;
+      overflow: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // Load the CSV file
+    d3.csv('df.csv').then(function(data) {
+      // Function to filter the data based on user's query
+      function filterData() {
+        var laterality = document.getElementById('laterality').value;
+        var tumorLocation = document.getElementById('tumorLocation').value;
+        var gender = document.getElementById('gender').value;
+        var age = document.getElementById('age').value;
+        var previousTreatment = document.getElementById('previousTreatment').value;
+        var tumorType = document.getElementById('tumorType').value;
+        var level = document.getElementById('level').value;
+        var spreadOfTumor = document.getElementById('spreadOfTumor').value;
+
+        var filteredData = data.filter(function(d) {
+          return (laterality === '' || d.laterality === laterality) &&
+                 (tumorLocation === '' || d.tumor_location === tumorLocation) &&
+                 (gender === '' || d.gender === gender) &&
+                 (age === '' || parseInt(d.age) >= parseInt(age)) &&
+                 (previousTreatment === '' || d.previous_treatments === previousTreatment) &&
+                 (tumorType === '' || d.tumor_type === tumorType) &&
+                 (level === '' || d.level === level) &&
+                 (spreadOfTumor === '' || d.spread_of_tumor === spreadOfTumor);
+        });
+
+        return filteredData;
+      }
+
+      // Function to update the output table
+      function updateTable() {
+        var outputTable = document.getElementById('output');
+        outputTable.innerHTML = '';
+
+        var filteredData = filterData();
+
+        // Create table header
+        var tableHeader = outputTable.createTHead();
+        var headerRow = tableHeader.insertRow();
+        Object.keys(filteredData[0]).forEach(function(key) {
+          var headerCell = headerRow.insertCell();
+          headerCell.textContent = key;
+        });
+
+        // Create table rows
+        filteredData.forEach(function(d) {
+          var row = outputTable.insertRow();
+          Object.values(d).forEach(function(value) {
+            var cell = row.insertCell();
+            cell.textContent = value;
+          });
+        });
+
+        // Display number of results
+        var resultCount = document.getElementById('resultCount');
+        resultCount.textContent = 'Number of Results: ' + filteredData.length;
+      }
+
+      // Perform data analysis when the 'Analyze' button is clicked
+      function performDataAnalysis() {
+        updateTable();
+      }
+
+      // Attach event listener to the 'Analyze' button
+      var analyzeButton = document.querySelector('button');
+      analyzeButton.addEventListener('click', performDataAnalysis);
+    });
+  </script>
+</head>
+<body>
+  <h1>Data Analysis with D3.js</h1>
+  <label for="laterality">Laterality:</label>
+  <select id="laterality">
+    <option value="">Select Laterality</option>
+    <option value="Right">Right</option>
+    <option value="Left">Left</option>
+  </select>
+  <br>
+
+  <label for="tumorLocation">Tumor Location:</label>
+  <select id="tumorLocation">
+    <option value="">Select Tumor Location</option>
+    <option value="Supratentorial, Frontal Lobe">Supratentorial, Frontal Lobe</option>
+    <option value="Supratentorial, Temporal Lobe">Supratentorial, Temporal Lobe</option>
+    <option value="Supratentorial, Parietal Lobe">Supratentorial, Parietal Lobe</option>
+    <option value="Posterior Fossa, Cerebellum">Posterior Fossa, Cerebellum</option>
+  </select>
+  <br>
+
+  <label for="gender">Gender:</label>
+  <select id="gender">
+    <option value="">Select Gender</option>
+    <option value="MALE">Male</option>
+    <option value="FEMALE">Female</option>
+  </select>
+  <br>
+
+  <label for="age">Age:</label>
+  <input type="number" id="age" min="5" max="75">
+  <br>
+
+  <label for="previousTreatment">Previous Treatment:</label>
+  <select id="previousTreatment">
+    <option value="">Select Previous Treatment</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+  <br>
+
+  <label for="tumorType">Tumor Type:</label>
+  <select id="tumorType">
+    <option value="">Select Tumor Type</option>
+    <option value="meningioma">Meningioma</option>
+    <option value="glioma">Glioma</option>
+    <option value="pituitary">Pituitary</option>
+  </select>
+  <br>
+
+  <label for="level">Level:</label>
+  <select id="level">
+    <option value="">Select Level</option>
+    <option value="1">1</option>
+    <option value="0">0</option>
+  </select>
+  <br>
+
+  <label for="spreadOfTumor">Spread of Tumor:</label>
+  <select id="spreadOfTumor">
+    <option value="">Select Spread of Tumor</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+  <br>
+
+  <button>Analyze</button>
+  <div class="output-container">
+    <table id="output"></table>
+    
+  </div>
+  <div id="resultCount"></div>
+
+  
+</body>
+</html>

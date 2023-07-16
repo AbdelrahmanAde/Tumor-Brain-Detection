@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>TUMOR BRAIN CANCER DETECTION</title>
+ 
+
+    
+   <!-- Favicon -->
+   <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+   <!-- Google Web Fonts -->
+   <link rel="preconnect" href="https://fonts.gstatic.com">
+   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">  
+
+   <!-- Icon Font Stylesheet -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+   <!-- Libraries Stylesheet -->
+   <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+   <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
+
+   <!-- Customized Bootstrap Stylesheet -->
+   <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+   <!-- Template Stylesheet -->
+   <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+
+     <!-- Navbar Start -->
+<div class="container-fluid sticky-top bg-white shadow-sm">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
+            <a href="/index2" class="navbar-brand">
+                <h1 class="m-0 text-uppercase text-primary"><i class="fa fa-clinic-medical me-2"></i>Tumor Brain cancer Detection</h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-0">
+                    <a href="/index2" class="nav-item nav-link">Home</a>
+                    <a href="/service" class="nav-item nav-link">Service</a>
+                    <a href="/analysis" class="nav-item nav-link">Analysis</a>
+                    <a href="/dashboard" class="nav-item nav-link">Dashboard</a>
+                    <a href="/contact" class="nav-item nav-link">Contact</a>
+                    <a href="/about" class="nav-item nav-link">About</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<script>
+    // Get the current page URL
+    var currentPageUrl = window.location.href;
+
+    // Get all navigation links
+    var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+    // Loop through each navigation link
+    for (var i = 0; i < navLinks.length; i++) {
+        var link = navLinks[i];
+        var linkUrl = link.href;
+
+        // Check if the link URL matches the current page URL
+        if (currentPageUrl === linkUrl) {
+            // Add the "active" class to the link
+            link.classList.add('active');
+            break; // Exit the loop after finding the active link
+        }
+    }
+</script>
+
+    <form id="predict" action="/predict" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+           
+<div class="box11">
+    <div class="col-12">
+      <div class="mb-3">
+        <label for="formFileLg" class="form-label text-center">Please Upload Your MRI Here</label>
+        <input class="form-control form-control-lg" id="formFileLg" type="file" name="file" onchange="previewImage(event)" required>
+      </div>
+      <div class="d-flex justify-content-center">
+        <div class="image-container">
+          <img class="display-4" id="selected-image" style="width: 2000px; height: 2000px;">
+        </div>
+      </div>
+    </div>
+  </div>
+            </div>
+      <div class="box12">
+            <p class="d-inline-block text-primary text-uppercase border-bottom border-5">Age</p>
+            <input type="range" class="form-range" min="1" max="75" id="customRange2" name="age">
+            <select id="sliderValue" class="form-select"></select>
+      
+            <p class="d-inline-block text-primary text-uppercase border-bottom border-5">Laterality</p>
+            <select class="form-select form-select-lg mb-3 form-select" aria-label=".form-select-lg example" id="laterality" name="laterality" required>
+            <option selected disabled>Open this select menu</option>
+            <option value="Left">Left</option>
+            <option value="Right">Right</option>
+            <option value="Midline">Midline</option>
+            </select>
+
+            <p class="d-inline-block text-primary text-uppercase border-bottom border-5">Tumor location</p>
+            <select class="form-select" id="tumor-location" name="tumor_location" required>
+            <option selected disabled>Open this select menu</option>
+            <option value="Supratentorial, Frontal Lobe">Supratentorial, Frontal Lobe</option>
+            <option value="Supratentorial, Temporal Lobe">Supratentorial, Temporal Lobe</option>
+            <option value="Supratentorial, Parietal Lobe">Supratentorial, Parietal Lobe</option>
+            <option value="Supratentorial, Occipital Lobe">Supratentorial, Occipital Lobe</option>
+            <option value="Posterior Fossa, Cerebellum">Posterior Fossa, Cerebellum</option>
+            </select>
+
+      
+            <label for="gender" class="form-label d-inline-block text-primary text-uppercase border-bottom border-5" for="gender">Gender</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" required>
+              <label class="form-check-label" for="genderMale">Male</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE">
+              <label class="form-check-label" for="genderFemale">Female</label>
+            </div>
+      
+            <div class="form-group">
+              <label class="d-inline-block text-primary text-uppercase border-bottom border-5" for="label2">Previous Treatment:</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="Previous_Treatment" id="label2option1" value="1" required>
+                <label class="form-check-label" for="label2option1">Yes</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="Previous_Treatment" id="label2option2" value="0" required>
+                <label class="form-check-label" for="label2option2">No</label>
+              </div>
+            </div>
+      
+            <div class="form-group">
+              <label class="d-inline-block text-primary text-uppercase border-bottom border-5" for="label4">Spread of tumor:</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="Spread_of_tumor" id="label2option1" value="1" required>
+                <label class="form-check-label" for="label2option1">Yes</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="Spread_of_tumor" id="label2option2" value="0" required>
+                <label class="form-check-label" for="label2option2">No</label>
+              </div>
+            </div>
+      
+            <button class="btn btn-primary w-60 py-3 mt-3" type="submit">Predict</button>
+          </div>
+        </div>
+        </form>
+
+        <p id="result"></p>
+   
+          <script>
+            const form = document.getElementById("predict");
+    
+            form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+    
+            // Perform an AJAX request to send the form data to the Flask server
+            const formData = new FormData(form);
+            fetch("/predict", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json()) // Parse the JSON response
+                .then(data => {
+                // Update the result elements with the received data
+                const tumorTypeCell = document.getElementById('tumor-type');
+                const gradeCell = document.getElementById('grade');
+                const protocolCell = document.getElementById('treatment-protocol');
+                const imageCell = document.getElementById('image-cell');
+                if (data.class_label === 'No tumor'){
+                    tumorTypeCell.textContent = 'No tumor detected.';
+                }
+                else{
+                tumorTypeCell.textContent = data.class_label;
+                gradeCell.textContent = data.grade;
+                protocolCell.textContent = data.protocol;
+                imageCell.innerHTML = `<img src="data:image/png;base64,${data.image}" alt="MRI Image">`;
+                }
+                
+                })
+                .catch(error => {
+                console.log("An error occurred:", error);
+                });
+            });
+    
+      </script>
+      
+    
+           
+      <table class="container11 table">
+        <tbody>
+          <tr>
+            <th scope="row">Tumor type</th>
+            <td id="tumor-type"></td>
+            
+          </tr>
+          <tr>
+            <th scope="row">Grade</th>
+            <td id="grade"></td>
+            
+          </tr>
+          <tr>
+            <th scope="row">Treatment protocol</th>
+            <td colspan="2" id="treatment-protocol"></td>
+          </tr>
+          <tr>
+            <th scope="row">Tumor location</th>
+            <td colspan="3" id="image-cell"></td>
+          </tr>
+        </tbody>
+      </table>
+      
+
+
+
+    <!-- Appointment End -->
+
+ <!-- Services Start -->
+ <div class="container-fluid py-5">
+    <div class="container">
+      
+        <div class="row g-5">
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-2x fa-user-md text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Accurate and Reliable Diagnosis</h4>
+                    <p class="m-0">Our machine learning model has been developed to provide highly accurate and reliable diagnoses of brain tumors, helping patients receive the treatment they need as soon as possible.</p>
+                    <a class="btn btn-lg btn-primary rounded-pill" href="">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-2x fa-procedures text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Patient-Centered Care</h4>
+                    <p class="m-0">We understand the importance of providing compassionate and personalized care to our patients. Our team of experts works closely with each patient to ensure they receive the best possible care and support throughout their treatment/p>
+                    <a class="btn btn-lg btn-primary rounded-pill" href="">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-2x fa-stethoscope text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Timely Results</h4>
+                    <p class="m-0">Our model provides quick and timely results, enabling medical professionals to make informed decisions and provide appropriate treatment plans for their patients</p>
+                    <a class="btn btn-lg btn-primary rounded-pill" href="">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-2x fa-ambulance text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Diverse Patient Population</h4>
+                    <p class="m-0">Our dataset includes a diverse population of patients from multiple hospitals, allowing our machine learning model to provide accurate diagnoses for patients from all walks of life.</p>
+                    <a class="btn btn-lg btn-primary rounded-pill" href="">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-2x fa-pills text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Continuous Improvement</h4>
+                    <p class="m-0">We are committed to continuous improvement and regularly update our model to ensure that it remains at the forefront of technology and delivers the highest quality of care to our patients.</p>
+                    <a class="btn btn-lg btn-primary rounded-pill" href="">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon mb-4">
+                        <i class="fa fa-2x fa-microscope text-white"></i>
+                   
+                    </div>
+                    <h4 class="mb-3">Utilizing Cutting-Edge Technology</h4>
+                    <p class="m-0">Our model utilizes advanced technologies such as deep learning and AI algorithms to provide precise and efficient diagnoses of brain tumors, ensuring the highest standards of care for our patients.</p>
+                    <a class="btn btn-lg btn-primary rounded-pill" href="">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Services End -->
+
+
+
+    <!-- Testimonial Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5" style="max-width: 500px;">
+                <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5">Testimonial</h5>
+                <h1 class="display-4">Patients Say About Our Services</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="owl-carousel testimonial-carousel">
+                        <div class="testimonial-item text-center">
+                            <div class="position-relative mb-5">
+                                <img class="img-fluid rounded-circle mx-auto" src="static/img/testimonial-1.jpg" alt="">
+                                <div class="position-absolute top-100 start-50 translate-middle d-flex align-items-center justify-content-center bg-white rounded-circle" style="width: 60px; height: 60px;">
+                                    <i class="fa fa-quote-left fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                            <p class="fs-4 fw-normal">"As a neurosurgeon, I have witnessed the transformative power of AI in brain tumor detection. The accuracy and efficiency of AI algorithms in analyzing medical imaging data have revolutionized the way we diagnose and treat patients. AI has truly become a valuable assistant in our fight against brain tumors."
+
+                                .</p>
+                            <hr class="w-25 mx-auto">
+                            <h3>Dr. Emily Watson: </h3>
+                            <h6 class="fw-normal text-primary mb-3">Neurosurgeon</h6>
+                        </div>
+                        <div class="testimonial-item text-center">
+                            <div class="position-relative mb-5">
+                                <img class="img-fluid rounded-circle mx-auto" src="static/img/testimonial-2.jpg" alt="">
+                                <div class="position-absolute top-100 start-50 translate-middle d-flex align-items-center justify-content-center bg-white rounded-circle" style="width: 60px; height: 60px;">
+                                    <i class="fa fa-quote-left fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                            <p class="fs-4 fw-normal">"The integration of AI in brain tumor detection has significantly improved our diagnostic capabilities. The AI algorithms sift through massive amounts of medical data with unparalleled accuracy, assisting us in identifying even the most subtle anomalies. With AI's assistance, we can now detect tumors at earlier stages, leading to better treatment outcomes and improved patient care."</p>
+                            <hr class="w-25 mx-auto">
+                            <h3>Dr. David Patel  </h3>
+                            <h6 class="fw-normal text-primary mb-3">Radiologist</h6>
+                        </div>
+                        <div class="testimonial-item text-center">
+                            <div class="position-relative mb-5">
+                                <img class="img-fluid rounded-circle mx-auto" src="static/img/testimonial-3.jpg" alt="">
+                                <div class="position-absolute top-100 start-50 translate-middle d-flex align-items-center justify-content-center bg-white rounded-circle" style="width: 60px; height: 60px;">
+                                    <i class="fa fa-quote-left fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                            <p class="fs-4 fw-normal">"I owe my life to AI-powered brain tumor detection. When traditional methods failed to detect my tumor, AI algorithms stepped in and revealed the hidden threat. Thanks to early detection, I received timely treatment and successfully defeated the tumor. AI has not only saved lives but also offered hope and a brighter future to countless patients like me." </p>
+                            <hr class="w-25 mx-auto">
+                            <h3>Sarah Thompson</h3>
+                            <h6 class="fw-normal text-primary mb-3">Brain Tumor Survivor </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+
+    <!-- Footer Start -->
+    <!-- <div class="container-fluid bg-dark text-light mt-5 py-5">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Get In Touch</h4>
+                    <p class="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary me-3"></i>123 Street, New York, USA</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary me-3"></i>info@example.com</p>
+                    <p class="mb-0"><i class="fa fa-phone-alt text-primary me-3"></i>+012 345 67890</p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Quick Links</h4>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Home</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>About Us</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Our Services</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Meet The Team</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Latest Blog</a>
+                        <a class="text-light" href="#"><i class="fa fa-angle-right me-2"></i>Contact Us</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Popular Links</h4>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Home</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>About Us</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Our Services</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Meet The Team</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Latest Blog</a>
+                        <a class="text-light" href="#"><i class="fa fa-angle-right me-2"></i>Contact Us</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Newsletter</h4>
+                    <form action="">
+                        <div class="input-group">
+                            <input type="text" class="form-control p-3 border-0" placeholder="Your Email Address">
+                            <button class="btn btn-primary">Sign Up</button>
+                        </div>
+                    </form>
+                    <h6 class="text-primary text-uppercase mt-4 mb-3">Follow Us</h6>
+                    <div class="d-flex">
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle me-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle" href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light mt-5 py-5">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Get In Touch</h4>
+                    <p class="mb-4">We will be ready to communicate with you at any time</p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary me-3"></i>cairo,mokattam,The Fifth District, next to Al-Limby's car, Btaa Al-Kebda </p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary me-3"></i>eng4ah@example.com</p>
+                    <p class="mb-0"><i class="fa fa-phone-alt text-primary me-3"></i>+2 - 011- 012 -013- 78</p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Quick Links</h4>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Home</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>About Us</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Our Services</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Meet The Team</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Latest Blog</a>
+                        <a class="text-light" href="#"><i class="fa fa-angle-right me-2"></i>Contact Us</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Popular Links</h4>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Home</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>About Us</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Our Services</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Meet The Team</a>
+                        <a class="text-light mb-2" href="#"><i class="fa fa-angle-right me-2"></i>Latest Blog</a>
+                        <a class="text-light" href="#"><i class="fa fa-angle-right me-2"></i>Contact Us</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Follow Us</h4>
+                    <form action="">
+                        
+                    </form>
+                    <h6 class="text-primary text-uppercase mt-4 mb-3"></h6>
+                    <div class="d-flex">
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle me-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="btn btn-lg btn-primary btn-lg-square rounded-circle" href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid bg-dark text-light border-top border-secondary py-4">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0">&copy; <a class="text-primary" href="#"></a>All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">Designed by <a class="text-primary" href="https://www.facebook.com/ahmedsu333">  A.seliman</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+</body>
+
+</html>
